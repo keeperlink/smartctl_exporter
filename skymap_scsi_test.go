@@ -77,3 +77,18 @@ func TestSCSIMetricDescriptorsRegistered(t *testing.T) {
 		}
 	}
 }
+
+func TestMegaRAIDCollectsSCSIMetrics(t *testing.T) {
+	names := skymapGatherSCSIMetricNames(t, "megaraid,0")
+	for _, metric := range []string{
+		"smartctl_scsi_grown_defect_list",
+		"smartctl_read_total_uncorrected_errors",
+		"smartctl_write_total_uncorrected_errors",
+		"smartctl_device_bytes_read",
+		"smartctl_device_bytes_written",
+	} {
+		if !names[metric] {
+			t.Errorf("MegaRAID SCSI device did not expose %s", metric)
+		}
+	}
+}
